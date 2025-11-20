@@ -37,11 +37,6 @@ jobs:
       # Assuming you created the Kaalen_App.spec file previously
       run: pyinstaller Kaalen_App.spec
 
-    - name: 🖼️ Copy Icon File (if needed for the installer setup)
-      # If icon.ico is not already in the dist folder, manually copy it there
-      # For example, if icon.ico is in the root, uncomment:
-      # run: copy icon.ico dist\Kaalen_App\icon.ico
-
     - name: 💾 Compile Installer (Inno Setup)
       # Use the path where Chocolatey installs the compiler
       run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Kaalen_Installer.iss'
