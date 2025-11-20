@@ -1,0 +1,54 @@
+# .github/workflows/build.yml
+
+name: Create Windows Installer
+
+on:
+  # Triggers the workflow on push to the main branch
+  push:
+    branches: [ main ]
+  # Allows manual triggering from the GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  build_installer:
+    # Use a Windows runner to build a Windows executable and installer
+    runs-on: windows-latest
+
+    steps:
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' 
+
+    - name: 📦 Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: ⚙️ Install Inno Setup Compiler
+      # Uses Chocolatey, the package manager for Windows, available on GitHub runners
+      run: choco install innosetup --no-progress
+
+    - name: 🔧 Generate Executable (PyInstaller)
+      # Assuming you created the Kaalen_App.spec file previously
+      run: pyinstaller Kaalen_App.spec
+
+    - name: 🖼️ Copy Icon File (if needed for the installer setup)
+      # If icon.ico is not already in the dist folder, manually copy it there
+      # For example, if icon.ico is in the root, uncomment:
+      # run: copy icon.ico dist\Kaalen_App\icon.ico
+
+    - name: 💾 Compile Installer (Inno Setup)
+      # Use the path where Chocolatey installs the compiler
+      run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Kaalen_Installer.iss'
+
+    - name: 🚀 Upload Installer to Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        # The output folder defined in Kaalen_Installer.iss
+        name: Kaalen-Windows-Installer
+        path: Output_Installer\Kaalen_Setup_v1.0.exe
