@@ -2,12 +2,13 @@
 
 block_cipher = None
 
-# Standard analysis
 a = Analysis(
     ['App_PP.py'],
     pathex=['.'],
     binaries=[],
-    datas=[],
+    datas=[
+        # remove resources_rc.py if it's a Python import
+    ],
     hiddenimports=[
         'matplotlib.backends.backend_qt5agg',
         'scipy.special.orthogonal',
@@ -19,8 +20,6 @@ a = Analysis(
         'PyQt5.QtGui',
         'PyQt5.QtWidgets',
         'PyQt5.Qt',
-        'scipy._lib.array_api_compat.numpy',
-        'scipy._lib.array_api_compat.numpy.fft',
         'scipy.linalg.cython_blas',
         'scipy.linalg.cython_lapack',
         'scipy.optimize.minpack',
@@ -32,26 +31,20 @@ a = Analysis(
     cipher=block_cipher,
 )
 
-# Add Qt plugins properly
-from PyInstaller.utils.hooks import collect_qt_plugins
-qt_plugins = collect_qt_plugins('all')   # safer
-
-a.binaries.extend(qt_plugins)
-
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
     a.scripts,
-    [],
-    [],
+    a.binaries,
+    a.zipfiles,
     a.datas,
     name='Kaalen_App',
     debug=False,
     strip=False,
-    upx=True,
+    upx=False,    # disable UPX on GitHub runner unless you install it
     console=False,
-    icon=None,
+    icon="icon.ico",   # recommended to ensure your EXE has an icon
 )
 
 coll = COLLECT(
@@ -60,5 +53,6 @@ coll = COLLECT(
     a.zipfiles,
     a.datas,
     strip=False,
-    upx=True,
+    upx=False,
+    name='Kaalen_App'
 )
