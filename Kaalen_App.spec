@@ -30,6 +30,13 @@ a = Analysis(
         # Often needed for PyQt5/PyQtGraph complex module linking
         'PyQt5.QtCore',
         'PyQt5.QtGui',
+        
+        # --- NEW SCI-PY FIXES ---
+        'scipy._lib.array_api_compat.numpy',
+        'scipy._lib.array_api_compat.numpy.fft',
+        'scipy.linalg.cython_blas', # Often missed low-level dependency
+        'scipy.linalg.cython_lapack',
+        'scipy.optimize.minpack',
     ],
     hookspath=[],
     hooksconfig={},
