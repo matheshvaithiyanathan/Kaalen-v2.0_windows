@@ -12,7 +12,7 @@ OutputDir=Output_Installer
 OutputBaseFilename=Kaalen_Setup_v1.0
 Compression=lzma
 SolidCompression=yes
-SetupIconFile=icon.ico
+SetupIconFile=icon.ico 
 WizardStyle=modern
 
 [Files]
@@ -21,9 +21,9 @@ Source: "dist\Kaalen_App\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdi
 
 [Icons]
 ; Creates a Start Menu shortcut
-Name: "{group}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"
+Name: "{group}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"
 ; Creates an optional Desktop shortcut
-Name: "{autodesktop}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autodesktop}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
