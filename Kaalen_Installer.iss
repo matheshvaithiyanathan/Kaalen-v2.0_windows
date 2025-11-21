@@ -14,7 +14,10 @@ Compression=lzma
 SolidCompression=yes
 SetupIconFile=icon.ico 
 WizardStyle=modern
-RestartIfNeeded=yes 
+; Removed invalid directive: RestartIfNeeded=yes 
+; If you need restart functionality, use one of these instead:
+; RestartApplications=yes
+; Or for more control: AlwaysRestart=no
 
 [Files]
 ; This command copies all files (recursively) from the PyInstaller build directory
