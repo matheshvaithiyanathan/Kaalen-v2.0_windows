@@ -38,10 +38,11 @@ jobs:
       run: pyinstaller Kaalen_App.spec
 
     - name: 🖼️ Ensure Icon Exists for Installer
-      # The installer needs a specific icon file (icon.ico). 
-      # Using PowerShell's Copy-Item is more reliable than the cmd 'copy'.
-      # CRITICAL: Ensure 'icon.ico' exists in the root of your repository!
-      run: Copy-Item -Path "icon.ico" -Destination "dist\Kaalen_App\icon.ico"
+      # FIX: Ensure destination directory exists and then copy the icon.
+      # The PyInstaller step above guarantees the base 'dist' folder exists.
+      run: |
+        New-Item -Path "dist\Kaalen_App" -ItemType Directory -ErrorAction SilentlyContinue
+        Copy-Item -Path "icon.ico" -Destination "dist\Kaalen_App\icon.ico"
 
     - name: 💾 Compile Installer (Inno Setup)
       # FIX: Use the Call operator '&' and wrap all paths/arguments in quotes for PowerShell
