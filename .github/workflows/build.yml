@@ -34,16 +34,19 @@ jobs:
       # Uses Chocolatey, the package manager for Windows, available on GitHub runners
       run: choco install innosetup --no-progress
 
-    - name: 🔧 Generate Executable (PyInstaller) - Check Output
-      # Assuming you created the Kaalen_App.spec file previously
-      # Use verbose output (-v) to check for warnings/errors related to missing DLLs
-      run: pyinstaller -v Kaalen_App.spec
+    - name: 🔧 Generate Executable (PyInstaller) - Clean and Rebuild
+      # 1. Remove old build and dist folders to prevent errors from previous failed runs.
+      # 2. Use maximum verbosity (-D is implicit in the spec file, -y confirms overwrite)
+      run: |
+        Remove-Item -Path "build", "dist" -Recurse -ErrorAction SilentlyContinue
+        pyinstaller -y --clean Kaalen_App.spec
 
     # --- CRITICAL DEBUGGING STEP ---
     - name: 🔎 Verify PyInstaller Output Folder
       # List the contents of the directory PyInstaller creates
       run: |
         Write-Host "Contents of the dist/Kaalen_App folder:"
+        # Use -ErrorAction Stop to make sure we detect if the folder doesn't exist
         Get-ChildItem -Path "dist\Kaalen_App" -Recurse
 
     - name: 💾 Compile Installer (Inno Setup)
