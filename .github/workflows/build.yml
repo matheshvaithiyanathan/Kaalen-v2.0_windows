@@ -1,33 +1,56 @@
-build_installer:
-  name: 2. Compile Final Installer
-  runs-on: windows-latest
-  needs: [build_executable]
+name: Create Windows Installer
 
-  steps:
-  - name: ⬇️ Checkout Repository
-    uses: actions/checkout@v4
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_executable:
+    name: 1. Build PyInstaller Executable
+    runs-on: windows-latest
+    
+    steps:
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' 
+
+    - name: 📦 Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller==6.2.0
+        pip install pandas numpy scipy lmfit pyqtgraph PyQt5 matplotlib 
+
+    - name: 🔧 Generate Executable (PyInstaller)
+      run: |
+        Remove-Item -Path "build", "dist" -Recurse -ErrorAction SilentlyContinue
+        python -m PyInstaller -y --clean Kaalen_App.spec
+        
+        if (-not (Test-Path -Path "dist\Kaalen_App")) {
+            throw "PyInstaller failed to create the 'dist\Kaalen_App' bundle."
+        }
+    
+    - name: ⬆️ Upload Executable as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kaalen-pyinstaller-bundle
+        path: dist/Kaalen_App/
+        retention-days: 1
+
+  build_installer:
+    name: 2. Compile Final Installer
+    runs-on: windows-latest
+    needs: [build_executable]
+
+    steps:
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v4
       
-  - name: ⬇️ Download Executable Artifact
-    uses: actions/download-artifact@v4
-    with:
-      name: kaalen-pyinstaller-bundle
-      path: .
-
-  - name: 📁 Move build into dist/Kaalen_App
-    run: |
-      Remove-Item -Recurse -Force dist\Kaalen_App -ErrorAction SilentlyContinue
-      New-Item -ItemType Directory -Path dist\Kaalen_App | Out-Null
-      Move-Item kaalen-pyinstaller-bundle\* dist\Kaalen_App
-      Remove-Item -Recurse -Force kaalen-pyinstaller-bundle
-
-  - name: ⚙️ Install Inno Setup Compiler
-    run: choco install innosetup --no-progress
-
-  - name: 💾 Compile Installer (Inno Setup)
-    run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Kaalen_Installer.iss"'
-
-  - name: 🚀 Upload Installer to Artifacts
-    uses: actions/upload-artifact@v4
-    with:
-      name: Kaalen-Windows-Installer
-      path: Output_Installer\Kaalen_Setup_v1.0.exe
+    - name: ⬇️ Download Executable Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name:
