@@ -14,8 +14,6 @@ Compression=lzma
 SolidCompression=yes
 SetupIconFile=icon.ico 
 WizardStyle=modern
-
-; --- NEW: Allow installer to prompt for restart if needed ---
 RestartIfNeeded=yes 
 
 [Files]
