@@ -10,10 +10,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_installer:
-    # Use a Windows runner to build a Windows executable and installer
+  build_executable:
+    name: 1. Build PyInstaller Executable
     runs-on: windows-latest
-
+    
     steps:
     - name: ⬇️ Checkout Repository
       uses: actions/checkout@v4
@@ -23,52 +23,57 @@ jobs:
       with:
         python-version: '3.10' 
 
-    - name: 📦 Install Python Dependencies (Strict Environment)
+    - name: 📦 Install Python Dependencies
       # Install packages in a specific order known to minimize PyQt/SciPy issues
       run: |
         python -m pip install --upgrade pip
-        
-        # Install the PyInstaller version most commonly verified against PyQt5 5.15.x
         pip install pyinstaller==6.2.0
+        pip install pandas numpy scipy lmfit pyqtgraph PyQt5 matplotlib 
+        Write-Host "Dependencies installed successfully."
 
-        # Install core dependencies
-        pip install pandas numpy scipy lmfit pyqtgraph
-        
-        # Install Qt-dependent component (PyQt5) and Matplotlib last
-        pip install PyQt5 matplotlib 
-        
-        # Ensure resources_rc.py is accessible by PyInstaller hooks
-        Write-Host "Verifying Python dependencies are fully installed..."
-
-    - name: ⚙️ Install Inno Setup Compiler
-      # Uses Chocolatey, the package manager for Windows, available on GitHub runners
-      run: choco install innosetup --no-progress
-
-    - name: 🔧 Generate Executable (PyInstaller) - Clean and Rebuild
-      # 1. Remove old build and dist folders to prevent errors from previous failed runs.
-      # 2. Use maximum verbosity (-D is implicit in the spec file, -y confirms overwrite)
+    - name: 🔧 Generate Executable (PyInstaller) - Force Build
       run: |
         Remove-Item -Path "build", "dist" -Recurse -ErrorAction SilentlyContinue
-        pyinstaller -y --clean Kaalen_App.spec
+        # Use python -m PyInstaller is the safer invocation
+        python -m PyInstaller -y --clean Kaalen_App.spec
+        
+        # Verify and fail fast if the output folder does not exist
+        if (-not (Test-Path -Path "dist\Kaalen_App")) {
+            throw "PyInstaller failed to create the 'dist\Kaalen_App' bundle. Check detailed logs above for collection errors."
+        }
+    
+    - name: ⬆️ Upload Executable as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kaalen-pyinstaller-bundle
+        path: dist/Kaalen_App/ 
+        retention-days: 1
 
-    - name: ⏳ Wait for File System Flush (5 seconds)
-      # Wait a few seconds to ensure all files are fully written to the 'dist' folder
-      run: Start-Sleep -Seconds 5
+  build_installer:
+    name: 2. Compile Final Installer
+    runs-on: windows-latest
+    needs: [build_executable] # This ensures Job 2 only runs if Job 1 succeeded
 
-    - name: 🔎 Verify PyInstaller Output Folder
-      # List the contents of the directory PyInstaller creates
-      run: |
-        Write-Host "Contents of the dist/Kaalen_App folder:"
-        # Use -ErrorAction Stop to make sure we detect if the folder doesn't exist
-        Get-ChildItem -Path "dist\Kaalen_App" -Recurse
+    steps:
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: ⬇️ Download Executable Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: kaalen-pyinstaller-bundle
+        # The artifact is downloaded to the root, creating a folder named 'kaalen-pyinstaller-bundle'
+        path: dist/Kaalen_App/ 
+        
+    - name: ⚙️ Install Inno Setup Compiler
+      run: choco install innosetup --no-progress
 
     - name: 💾 Compile Installer (Inno Setup)
-      # FIX: Use the Call operator '&' and wrap all paths/arguments in quotes for PowerShell
+      # Inno Setup is now run after the files have been downloaded into the expected 'dist/Kaalen_App' folder.
       run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Kaalen_Installer.iss"'
 
     - name: 🚀 Upload Installer to Artifacts
       uses: actions/upload-artifact@v4
       with:
-        # The output folder defined in Kaalen_Installer.iss
         name: Kaalen-Windows-Installer
         path: Output_Installer\Kaalen_Setup_v1.0.exe
