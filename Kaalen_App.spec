@@ -34,7 +34,7 @@ a = Analysis(
         # --- NEW SCI-PY FIXES ---
         'scipy._lib.array_api_compat.numpy',
         'scipy._lib.array_api_compat.numpy.fft',
-        'scipy.linalg.cython_blas', # Often missed low-level dependency
+        'scipy.linalg.cython_blas', 
         'scipy.linalg.cython_lapack',
         'scipy.optimize.minpack',
     ],
@@ -66,7 +66,9 @@ exe = EXE(pyz,
           disable_window_shadow=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None,)
+          entitlements_file=None,
+          # --- FIX: Embed the icon in the executable's metadata ---
+          icon='icon.ico')
 
 # 4. Collection step (Crucial for multi-file build)
 coll = COLLECT(exe,
