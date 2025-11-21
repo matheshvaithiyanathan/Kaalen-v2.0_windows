@@ -2,25 +2,39 @@
 
 block_cipher = None
 
+# 1. Define the primary executable analysis
 a = Analysis(
     ['App_PP.py'],
-    pathex=['.'],
+    pathex=['.'], 
     binaries=[],
     datas=[
-        # remove resources_rc.py if it's a Python import
+        # Explicitly include the Python resource file and the external icon file
+        ('resources_rc.py', '.'),
+        ('icon.ico', '.'), 
     ],
+    # CRITICAL: These hidden imports are necessary for PyQt5, Matplotlib, SciPy, and Pandas GUIs
     hiddenimports=[
         'matplotlib.backends.backend_qt5agg',
-        'scipy.special.orthogonal',
+        'scipy.special.orthogonal', 
         'numpy.core._dtype_ctypes',
+        
+        # Additional essential scientific/PyQt imports
         'pandas._libs.tslibs.timedeltas',
         'PyQt5.QtNetwork',
         'PyQt5.QtPrintSupport',
+        
+        # Ensure Qt plugins and styling hooks are collected
+        'PyQt5.Qt.plugins.platforms',
+        'PyQt5.Qt.plugins.styles',
+        
+        # Often needed for PyQt5/PyQtGraph complex module linking
         'PyQt5.QtCore',
         'PyQt5.QtGui',
-        'PyQt5.QtWidgets',
-        'PyQt5.Qt',
-        'scipy.linalg.cython_blas',
+        
+        # --- NEW SCI-PY FIXES ---
+        'scipy._lib.array_api_compat.numpy',
+        'scipy._lib.array_api_compat.numpy.fft',
+        'scipy.linalg.cython_blas', 
         'scipy.linalg.cython_lapack',
         'scipy.optimize.minpack',
     ],
@@ -28,31 +42,40 @@ a = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
     cipher=block_cipher,
+    noarchive=False,
 )
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
 
-exe = EXE(
-    pyz,
-    a.scripts,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    name='Kaalen_App',
-    debug=False,
-    strip=False,
-    upx=False,    # disable UPX on GitHub runner unless you install it
-    console=False,
-    icon="icon.ico",   # recommended to ensure your EXE has an icon
-)
+exe = EXE(pyz,
+          a.scripts, 
+          a.binaries,
+          a.zipfiles,
+          a.datas,
+          name='Kaalen_App',
+          debug=False,
+          strip=False,
+          upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=False, 
+          disable_window_shadow=False,
+          target_arch=None,
+          codesign_identity=None,
+          entitlements_file=None,
+          # --- FIX: Embed the icon in the executable's metadata for the OS shell ---
+          icon='icon.ico')
 
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=False,
-    name='Kaalen_App'
-)
+# 4. Collection step (Crucial for multi-file build)
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='Kaalen_App')
