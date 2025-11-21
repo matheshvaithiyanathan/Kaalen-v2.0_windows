@@ -1,42 +1,34 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
+import sys
 
 block_cipher = None
 
-# 1. Define the primary executable analysis
 a = Analysis(
     ['App_PP.py'],
-    pathex=['.'], 
+    pathex=['.'],
     binaries=[],
     datas=[
-        # Explicitly include the resource file and the main icon
-        ('resources_rc.py', '.'),
-        ('icon.ico', '.'), 
+        ('resources_rc.py', '.'),  # This is correct
     ],
-    # CRITICAL: These hidden imports are necessary for PyQt5, Matplotlib, SciPy, and Pandas GUIs
     hiddenimports=[
         'matplotlib.backends.backend_qt5agg',
         'scipy.special.orthogonal', 
         'numpy.core._dtype_ctypes',
-        
-        # Additional essential scientific/PyQt imports
         'pandas._libs.tslibs.timedeltas',
         'PyQt5.QtNetwork',
         'PyQt5.QtPrintSupport',
-        
-        # Ensure Qt plugins and styling hooks are collected
-        'PyQt5.Qt.plugins.platforms',
-        'PyQt5.Qt.plugins.styles',
-        
-        # Often needed for PyQt5/PyQtGraph complex module linking
         'PyQt5.QtCore',
         'PyQt5.QtGui',
-        
-        # --- NEW SCI-PY FIXES ---
         'scipy._lib.array_api_compat.numpy',
         'scipy._lib.array_api_compat.numpy.fft',
         'scipy.linalg.cython_blas', 
         'scipy.linalg.cython_lapack',
         'scipy.optimize.minpack',
+        
+        # CRITICAL: Add these for Qt resources
+        'PyQt5.Qt',
+        'PyQt5.QtWidgets',
     ],
     hookspath=[],
     hooksconfig={},
@@ -48,8 +40,18 @@ a = Analysis(
     noarchive=False,
 )
 
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+# Add Qt plugins explicitly
+from PyInstaller.utils.hooks import collect_qt_plugins
+
+# Collect Qt plugins (important for icons and styles)
+binaries = []
+binaries.extend(collect_qt_plugins('platforms'))
+binaries.extend(collect_qt_plugins('styles'))
+binaries.extend(collect_qt_plugins('imageformats'))
+
+a.binaries.extend(binaries)
+
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(pyz,
           a.scripts, 
@@ -63,14 +65,13 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=False, 
-          disable_window_shadow=False,
+          disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
           entitlements_file=None,
-          # --- FIX: Embed the icon in the executable's metadata ---
-          icon='icon.ico')
+          # Remove the external icon reference since you use resources
+          icon=None)  # No external icon file
 
-# 4. Collection step (Crucial for multi-file build)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
