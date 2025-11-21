@@ -15,6 +15,9 @@ SolidCompression=yes
 SetupIconFile=icon.ico 
 WizardStyle=modern
 
+; --- NEW: Allow installer to prompt for restart if needed ---
+RestartIfNeeded=yes 
+
 [Files]
 ; This command copies all files (recursively) from the PyInstaller build directory
 Source: "dist\Kaalen_App\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
