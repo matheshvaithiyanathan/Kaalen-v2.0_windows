@@ -12,7 +12,7 @@ OutputDir=Output_Installer
 OutputBaseFilename=Kaalen_Setup_v1.0
 Compression=lzma
 SolidCompression=yes
-SetupIconFile=dist\Kaalen_App\icon.ico ; Update this if your icon path is different
+SetupIconFile=icon.ico
 WizardStyle=modern
 
 [Files]
