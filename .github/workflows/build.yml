@@ -38,8 +38,8 @@ jobs:
       run: pyinstaller Kaalen_App.spec
 
     - name: 💾 Compile Installer (Inno Setup)
-      # Use the path where Chocolatey installs the compiler
-      run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Kaalen_Installer.iss'
+      # FIX: Use the Call operator '&' and wrap all paths/arguments in quotes for PowerShell
+      run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "Kaalen_Installer.iss"'
 
     - name: 🚀 Upload Installer to Artifacts
       uses: actions/upload-artifact@v4
