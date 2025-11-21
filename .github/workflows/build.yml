@@ -23,9 +23,10 @@ jobs:
       with:
         python-version: '3.10' 
 
-    - name: 📦 Install Python Dependencies
+    - name: 📦 Install Python Dependencies (Verbose)
       run: |
         python -m pip install --upgrade pip
+        # Install dependencies, including PyQt5 for the UI
         pip install -r requirements.txt
         pip install pyinstaller
 
@@ -33,16 +34,17 @@ jobs:
       # Uses Chocolatey, the package manager for Windows, available on GitHub runners
       run: choco install innosetup --no-progress
 
-    - name: 🔧 Generate Executable (PyInstaller)
+    - name: 🔧 Generate Executable (PyInstaller) - Check Output
       # Assuming you created the Kaalen_App.spec file previously
-      run: pyinstaller Kaalen_App.spec
+      # Use verbose output (-v) to check for warnings/errors related to missing DLLs
+      run: pyinstaller -v Kaalen_App.spec
 
-    - name: 🖼️ Ensure Icon Exists for Installer
-      # FIX: Ensure destination directory exists and then copy the icon.
-      # The PyInstaller step above guarantees the base 'dist' folder exists.
+    # --- CRITICAL DEBUGGING STEP ---
+    - name: 🔎 Verify PyInstaller Output Folder
+      # List the contents of the directory PyInstaller creates
       run: |
-        New-Item -Path "dist\Kaalen_App" -ItemType Directory -ErrorAction SilentlyContinue
-        Copy-Item -Path "icon.ico" -Destination "dist\Kaalen_App\icon.ico"
+        Write-Host "Contents of the dist/Kaalen_App folder:"
+        Get-ChildItem -Path "dist\Kaalen_App" -Recurse
 
     - name: 💾 Compile Installer (Inno Setup)
       # FIX: Use the Call operator '&' and wrap all paths/arguments in quotes for PowerShell
