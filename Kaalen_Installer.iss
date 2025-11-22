@@ -5,6 +5,7 @@
 AppName=Kaalen Data Viewer
 AppVersion=1.0
 AppPublisher=Mathesh Vaithiyanathan
+VersionInfoCompany=Mathesh Vaithiyanathan (Author)
 DefaultDirName={autopf}\Kaalen
 DefaultGroupName=Kaalen
 AllowNoIcons=yes
