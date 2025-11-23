@@ -1617,11 +1617,11 @@ class ExponentialFitterApp(QWidget):
                 params = self.fitted_params [ i:i + 2 ]
                 self.ax.plot(self.x_data, exponential(self.x_data, *params), '--', alpha = 0.6,
                              label = f'Component {i // 2 + 1}')
-        self.ax.set_xlabel(self.xlabel, fontsize = 12)
-        self.ax.set_ylabel(self.ylabel, fontsize = 12)
+        self.ax.set_xlabel(self.xlabel, fontsize = 18)
+        self.ax.set_ylabel(self.ylabel, fontsize = 18)
         self.ax.grid(True)
-        self.ax.legend(loc = 'best', fontsize = 10)
-        self.ax.tick_params(axis = 'both', which = 'major', labelsize = 10)
+        self.ax.legend(loc = 'best', fontsize = 18)
+        self.ax.tick_params(axis = 'both', which = 'major', labelsize = 18)
         self.canvas.draw( )
 
     def get_fitter_state(self):
@@ -1992,11 +1992,11 @@ class GaussianFitterApp(QWidget):
                                            'g--', alpha = 0.5, label = 'Adjusting Width')
             if 'Adjusting Width' not in legend_entries:
                 legend_entries.append('Adjusting Width')
-        self.ax.set_ylabel(self.ylabel, fontsize = 12)
-        self.ax.set_xlabel(self.xlabel, fontsize = 12)
+        self.ax.set_ylabel(self.ylabel, fontsize = 18)
+        self.ax.set_xlabel(self.xlabel, fontsize = 18)
         self.ax.grid(True)
-        self.ax.legend(loc = 'best', fontsize = 10)
-        self.ax.tick_params(axis = 'both', which = 'major', labelsize = 10)
+        self.ax.legend(loc = 'best', fontsize = 18)
+        self.ax.tick_params(axis = 'both', which = 'major', labelsize = 18)
         if self.fitted_params is None:
             pass
         self.canvas.draw( )
