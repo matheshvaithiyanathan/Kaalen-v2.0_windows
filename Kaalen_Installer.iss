@@ -3,7 +3,7 @@
 [Setup]
 ; IMPORTANT: Change the AppName, AppVersion, AppPublisher, and icon path as needed
 AppName=Kaalen 
-AppVersion=1.0
+AppVersion=2.0
 AppPublisher=Mathesh Vaithiyanathan
 VersionInfoCompany=Mathesh Vaithiyanathan (Author)
 DefaultDirName={autopf}\Kaalen
