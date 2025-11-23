@@ -66,10 +66,10 @@ def convolved_exponential_analytical(time, tau, t0, delta):
 
 def _format_unit_for_display(unit_string):
     unit_string = unit_string.replace("^-1", "\u207B\u00B9")
-    # unit_string = unit_string.replace("^-2", "\u207B\u00B²")
-    # unit_string = unit_string.replace("^2", "\u00B²")
-    # unit_string = unit_string.replace("^3", "\u00B³")
-    # unit_string = unit_string.replace("^-3", "\u207B\u00B³")
+    unit_string = unit_string.replace("^-2", "\u207B\u00B2")
+    unit_string = unit_string.replace("^2", "\u00B2")
+    unit_string = unit_string.replace("^3", "\u00B3")
+    unit_string = unit_string.replace("^-3", "\u207B\u00B3")
     unit_string = unit_string.replace("^-4", "\u207B\u2074")
     unit_string = unit_string.replace("_1", "\u2081")
     unit_string = unit_string.replace("_2", "\u2082")
@@ -431,7 +431,7 @@ class PFIDFitterApp(QWidget):
         self.time_min_input = QLineEdit("-15.0")
         grid_range.addWidget(self.time_min_input, 0, 1)
         grid_range.addWidget(QLabel(f"{self.y_axis_label} Max (must be negative, {formatted_y_unit}):"), 0, 2)
-        self.time_max_input = QLineEdit("-0.1")
+        self.time_max_input = QLineEdit("-0.5")
         grid_range.addWidget(self.time_max_input, 0, 3)
 
         grid_range.addWidget(QLabel(f"{self.x_axis_label} Min ({formatted_x_unit}):"), 1, 0)
@@ -582,7 +582,7 @@ class PFIDFitterApp(QWidget):
 
             if params [ "time_min" ] >= 0 or params [ "time_max" ] >= 0:
                 QMessageBox.warning(self, "Input Warning",
-                                    "PFID fit typically requires a **negative** time range (e.g., -15 to -0.1 ps). Please confirm your input is correct.")
+                                    "PFID fit typically requires a **negative** time range (e.g., -15 to -0.5 ps). Please confirm your input is correct.")
 
             self.results_text_edit.setText(
                 "Running fit... Please wait. This may take a moment due to grid interpolation and minimization.")
@@ -768,7 +768,7 @@ class PFIDFitterApp(QWidget):
         self.setWindowTitle(state.get('tab_title', 'PFID Fit'))
 
         self.time_min_input.setText(state.get('time_min_input', "-15.0"))
-        self.time_max_input.setText(state.get('time_max_input', "-0.1"))
+        self.time_max_input.setText(state.get('time_max_input', "-0.5"))
         self.probe_min_input.setText(state.get('probe_min_input', "1775"))
         self.probe_max_input.setText(state.get('probe_max_input', "1850"))
 
@@ -2490,7 +2490,7 @@ class SignalPlotterApp(QMainWindow):
         self.y_slider.setTickPosition(QSlider.TicksBelow)
         self.y_slider.valueChanged.connect(self.update_plots)
         self.min_level_input = QLineEdit(self)
-        self.min_level_input.setPlaceholderText("-0.1")
+        self.min_level_input.setPlaceholderText("-0.5")
         self.min_level_input.setFont(label_font)
         self.min_level_input.setValidator(QDoubleValidator( ))
         self.min_level_input.editingFinished.connect(self.update_plots)
@@ -2924,9 +2924,9 @@ class SignalPlotterApp(QMainWindow):
 
     def _format_unit_for_display(self, unit_string):
         unit_string = unit_string.replace("^-1", "\u207B\u00B9")
-        # unit_string = unit_string.replace("^2", "\u00B²")
-        # unit_string = unit_string.replace("^3", "\u00B³")
-        # unit_string = unit_string.replace("^-3", "\u207B\u00B³")
+        unit_string = unit_string.replace("^2", "\u00B2")
+        unit_string = unit_string.replace("^3", "\u00B3")
+        unit_string = unit_string.replace("^-3", "\u207B\u00B3")
         unit_string = unit_string.replace("^-4", "\u207B\u2074")
         unit_string = unit_string.replace("_1", "\u2081")
         unit_string = unit_string.replace("_2", "\u2082")
