@@ -2,7 +2,7 @@
 
 [Setup]
 ; IMPORTANT: Change the AppName, AppVersion, AppPublisher, and icon path as needed
-AppName=Kaalen Data Viewer
+AppName=Kaalen 
 AppVersion=1.0
 AppPublisher=Mathesh Vaithiyanathan
 VersionInfoCompany=Mathesh Vaithiyanathan (Author)
@@ -26,15 +26,15 @@ Source: "dist\Kaalen_App\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdi
 
 [Icons]
 ; Creates a Start Menu shortcut
-Name: "{group}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"
+Name: "{group}\Kaalen"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"
 ; Creates an optional Desktop shortcut
-Name: "{autodesktop}\Kaalen Data Viewer"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autodesktop}\Kaalen"; Filename: "{app}\Kaalen_App.exe"; IconFilename: "{app}\Kaalen_App.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Run]
-Filename: "{app}\Kaalen_App.exe"; Description: "{cm:LaunchProgram,Kaalen Data Viewer}"; Flags: nowait postinstall skipifdoesntexist
+Filename: "{app}\Kaalen_App.exe"; Description: "{cm:LaunchProgram,Kaalen}"; Flags: nowait postinstall skipifdoesntexist
 
 [Registry]
 ; Adds the application to Windows' Add/Remove Programs list
