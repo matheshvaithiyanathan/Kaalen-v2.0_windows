@@ -1,6 +1,6 @@
 ; -- Kaalen_Installer.iss --
 ; Fixes:
-; 1. Uses a static AppId to prevent duplicate "Programs and Features" entries.
+; 1. Uses a static AppId to prevent duplicate "Programs and Features" entries
 ; 2. Uses [InstallDelete] to forcefully remove the old, broken registry entry ("Kaalen Data Viewer 1.0").
 
 [Setup]
