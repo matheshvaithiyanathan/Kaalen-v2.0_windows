@@ -5,7 +5,7 @@
 
 [Setup]
 ; --- Application Identity ---
-AppName=Kaalen version 2.0         ; The desired display name for the Control Panel
+AppName=Kaalen version 2.0        
 AppVersion=2.0
 AppPublisher=Mathesh Vaithiyanathan
 VersionInfoCompany=Mathesh Vaithiyanathan (Author)
