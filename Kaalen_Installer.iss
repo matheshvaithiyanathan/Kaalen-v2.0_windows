@@ -1,11 +1,20 @@
 ; -- Kaalen_Installer.iss --
+; Fixes:
+; 1. Uses a static AppId to prevent duplicate "Programs and Features" entries.
+; 2. Uses [InstallDelete] to forcefully remove the old, broken registry entry ("Kaalen Data Viewer 1.0").
 
 [Setup]
-; IMPORTANT: Change the AppName, AppVersion, AppPublisher, and icon path as needed
-AppName=Kaalen 
+; --- Application Identity ---
+AppName=Kaalen version 2.0         ; The desired display name for the Control Panel
 AppVersion=2.0
 AppPublisher=Mathesh Vaithiyanathan
 VersionInfoCompany=Mathesh Vaithiyanathan (Author)
+
+; *** CRITICAL FIX: The AppId must be static across all versions (v1.0, v2.0, etc.) ***
+; This ensures that upgrading replaces the previous entry instead of adding a new one.
+AppId={{50E0D2F8-3A7B-46C9-A1C8-710E1C92E152} 
+
+; --- Installation Paths ---
 DefaultDirName={autopf}\Kaalen
 DefaultGroupName=Kaalen
 AllowNoIcons=yes
@@ -13,12 +22,15 @@ OutputDir=Output_Installer
 OutputBaseFilename=Kaalen_Setup_v2.0
 Compression=lzma
 SolidCompression=yes
-SetupIconFile=icon.ico 
+SetupIconFile=icon.ico
 WizardStyle=modern
-; Removed invalid directive: RestartIfNeeded=yes 
-; If you need restart functionality, use one of these instead:
-; RestartApplications=yes
-; Or for more control: AlwaysRestart=no
+
+; --- CRITICAL FIX: CLEANUP FOR BROKEN V1.0 REGISTRY ENTRY ---
+; This targets the old, manual registry subkey that was creating the leftover entry 
+; in Programs and Features (Kaalen Data Viewer 1.0) and deletes it during installation.
+[InstallDelete]
+; Target HKLM (Local Machine) where your previous script placed the entry
+Type: regkey; Name: "HKEYLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"
 
 [Files]
 ; This command copies all files (recursively) from the PyInstaller build directory
@@ -36,10 +48,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Run]
 Filename: "{app}\Kaalen_App.exe"; Description: "{cm:LaunchProgram,Kaalen}"; Flags: nowait postinstall skipifdoesntexist
 
-[Registry]
-; Adds the application to Windows' Add/Remove Programs list
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "string"; ValueName: "DisplayName"; ValueData: "Kaalen Data Viewer";
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "string"; ValueName: "DisplayVersion"; ValueData: "1.0";
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "string"; ValueName: "Publisher"; ValueData: "Mathesh Vaithiyanathan";
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "string"; ValueName: "InstallLocation"; ValueData: "{app}";
-Root: "HKLM"; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "string"; ValueName: "UninstallString"; ValueData: "{uninstallexe}";
+; *** IMPORTANT ***
+; The manual [Registry] section from your previous script that created the duplicate
+; "Kaalen Data Viewer 1.0" entry is now completely removed, as AppId handles this automatically.
