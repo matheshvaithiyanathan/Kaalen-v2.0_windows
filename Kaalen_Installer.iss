@@ -1,7 +1,7 @@
 ; -- Kaalen_Installer.iss --
 ; Fixes:
-; 1. Uses a static AppId to prevent duplicate "Programs and Features" entries
-; 2. Uses [InstallDelete] to forcefully remove the old, broken registry entry ("Kaalen Data Viewer 1.0").
+; 1. Uses a static AppId to prevent duplicate "Programs and Features" entries.
+; 2. Uses [Registry] with 'deletekey' flag to forcefully remove the old, broken registry entry ("Kaalen Data Viewer 1.0") DURING INSTALLATION.
 
 [Setup]
 ; --- Application Identity ---
@@ -26,11 +26,12 @@ SetupIconFile=icon.ico
 WizardStyle=modern
 
 ; --- CRITICAL FIX: CLEANUP FOR BROKEN V1.0 REGISTRY ENTRY ---
-; This targets the old, manual registry subkey that was creating the leftover entry 
-; in Programs and Features (Kaalen Data Viewer 1.0) and deletes it during installation.
-[InstallDelete]
-; Target HKLM (Local Machine) where your previous script placed the entry
-Type: regkey; Name: "HKEYLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"
+; We move the cleanup logic to the [Registry] section and use the 'deletekey' flag
+; which executes the deletion when the installer runs (line 33 in your previous script).
+[Registry]
+; This entry deletes the old, manual registry subkey used by the V1.0 installer.
+; We use 'none' as ValueType because we only want to delete the key, not create a value.
+Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Kaalen_App"; ValueType: "none"; Flags: deletekey;
 
 [Files]
 ; This command copies all files (recursively) from the PyInstaller build directory
