@@ -1,3 +1,5 @@
+# .github/workflows/build.yml
+
 name: Create Windows Installer
 
 on:
@@ -6,9 +8,6 @@ on:
     branches: [ main ]
   # Allows manual triggering from the GitHub Actions tab
   workflow_dispatch:
-  # ADDED: Trigger the workflow when a release is published
-  release:
-    types: [published]
 
 jobs:
   build_executable:
@@ -31,7 +30,6 @@ jobs:
         # Pinning PyInstaller to known stable version and installing all dependencies
         pip install pyinstaller==6.2.0 -r requirements.txt
         Write-Host "Dependencies installed successfully."
-
     - name: 🔧 Generate Executable (PyInstaller) - Force Build
       run: |
         Remove-Item -Path "build", "dist" -Recurse -ErrorAction SilentlyContinue
@@ -74,15 +72,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Kaalen-Windows-Installer
-        path: Output_Installer/Kaalen_Setup_v2.0.exe
-        
-    # NEW STEP ADDED: PUBLISH TO GITHUB RELEASE
-    - name: 🎁 Publish Installer to GitHub Release
-      # This action is designed to be used with the 'release: published' event
-      uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        # Attaches the compiled installer file to the release matching the tag
-        files: Output_Installer/Kaalen_Setup_v2.0.exe
-        # This uses the default GITHUB_TOKEN to authenticate
-        token: ${{ secrets.GITHUB_TOKEN }}
+        path: Output_Installer\Kaalen_Setup_v2.0.exe
