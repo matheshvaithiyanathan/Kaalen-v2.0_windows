@@ -43,7 +43,7 @@ Kaalen is a intuitive desktop application for visualizing and analyzing **Time-r
 
 ### Installation
 
-In the top of this page, you will find 'Actions'. Click on it and click on the most recent action. This will have an artifact which is the most recent for the windows in it. 
+In the top of this page, you will find 'Actions'. Click on it and click on the most recent action. This will have an artifact named 'kaalen-windows-installer' at the bottom of the page. 
 
 ---
 ### ✏️ Author's Note
