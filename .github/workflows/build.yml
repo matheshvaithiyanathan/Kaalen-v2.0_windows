@@ -53,6 +53,9 @@ jobs:
     name: 2. Compile Final Installer
     runs-on: windows-latest
     needs: [build_executable]
+    # FIX: Add permissions block to grant write access to the GITHUB_TOKEN for creating the release and tag
+    permissions:
+      contents: write
 
     steps:
     - name: ⬇️ Checkout Repository
