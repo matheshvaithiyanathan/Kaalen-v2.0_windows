@@ -43,7 +43,7 @@ Kaalen is a intuitive desktop application for visualizing and analyzing **Time-r
 
 ### Installation
 
-On the right side of this page click 'Releases'. Under 'Assets' you will find 'Kaalen_App_dist.zip'. Download and extract the files to find the `.exe` file. Please note that the first time run takes a few seconds for the application to open.
+In the top of this page, you will find 'Actions'. Click on it and click on the most recent action. This will have an artifact which is the most recent for the windows in it. 
 
 ---
 ### ✏️ Author's Note
