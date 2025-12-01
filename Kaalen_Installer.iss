@@ -5,7 +5,7 @@
 
 [Setup]
 ; --- Application Identity ---
-AppName=Kaalen version 2.0        
+AppName=Kaalen     
 AppVersion=2.0
 AppPublisher=Mathesh Vaithiyanathan
 VersionInfoCompany=Mathesh Vaithiyanathan (Author)
