@@ -89,7 +89,7 @@ jobs:
         tag_name: auto-release-${{ github.sha }}
         name: Automatic Build - ${{ github.sha }}
         draft: false
-        prerelease: true
+        prerelease: false
         # Attaches the compiled installer file to the new release
         files: Output_Installer/Kaalen_Setup_v2.0.exe
         # This uses the default GITHUB_TOKEN to authenticate
